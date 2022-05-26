@@ -1,23 +1,29 @@
 import keyboard
 import mouse
+import pyttsx3
 
-def pressright():
-    if(mouse.is_pressed(button='right')):
-        # release
-        mouse.release(button='right')
+def speak(text):
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+    engine.stop()
+    print(text)
 
+speak('welcome and press esc to exit')
+
+def toggle_button(btn):
+    if(mouse.is_pressed(button=btn)):
+        mouse.release(button=btn)
+        speak(btn+" released")
     else:
-        # press
-        mouse.press(button='right')
+        mouse.press(button=btn)
+        speak("holding "+btn)
 
-def pressleft():
-    if(mouse.is_pressed(button='left')):
-        # release
-        mouse.release(button='left')
+keyboard.add_hotkey('[', lambda:toggle_button('left'))
+keyboard.add_hotkey(']', lambda:toggle_button('right'))
 
-    else:
-        # press
-        mouse.press(button='left')
-keyboard.add_hotkey(']',pressright)
-keyboard.add_hotkey('[',pressleft)
-keyboard.wait('end')
+keyboard.wait('esc')
+
+mouse.release(button='right')
+mouse.release(button='left')
+speak("good bye")
